@@ -1,6 +1,7 @@
 import loadable from "@loadable/component";
 
 const Home = loadable(
+  // @ts-ignore
   () => import(/* webpackPrefetch: true */ "src/pages/views/home")
 );
 const WatchList = loadable(
@@ -13,7 +14,7 @@ const NotFound = loadable(
 
 const routes = [
   { path: "/", exact: true, component: Home },
-  { path: "/wishlist", exact: true, component: WatchList },
+  { path: "/watchlist", exact: true, component: WatchList },
   { path: "/404", component: NotFound },
 ];
 

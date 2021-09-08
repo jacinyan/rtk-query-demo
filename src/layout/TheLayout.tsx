@@ -1,3 +1,5 @@
+import { Box, Container } from "@chakra-ui/react";
+
 import { Route, Switch, Redirect } from "react-router-dom";
 import routes from "src/config/routes";
 
@@ -8,23 +10,25 @@ const TheLayout = () => {
   return (
     <>
       <TheHeader />
-      <main>
-        <Switch>
-          {routes.map((route, idx) => {
-            return (
-              route.component && (
-                <Route
-                  key={idx}
-                  exact={route.exact}
-                  path={route.path}
-                  render={() => <route.component />}
-                />
-              )
-            );
-          })}
-          <Redirect to={"/404"} />
-        </Switch>
-      </main>
+      <Box as={"main"}>
+        <Container maxW={"1553px"}>
+          <Switch>
+            {routes.map((route, idx) => {
+              return (
+                route.component && (
+                  <Route
+                    key={idx}
+                    exact={route.exact}
+                    path={route.path}
+                    render={() => <route.component />}
+                  />
+                )
+              );
+            })}
+            <Redirect to={"/404"} />
+          </Switch>
+        </Container>
+      </Box>
       <TheFooter />
     </>
   );

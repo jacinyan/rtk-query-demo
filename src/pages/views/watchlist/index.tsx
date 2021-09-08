@@ -1,7 +1,7 @@
-import React from "react";
+import { Box } from "@chakra-ui/layout";
 
 const WatchList = () => {
-  return <div>This is wishlist</div>;
+  return <Box>This is watchlist</Box>;
 };
 
 export default WatchList;

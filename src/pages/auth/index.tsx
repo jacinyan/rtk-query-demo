@@ -1,44 +1,17 @@
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { Button } from "@chakra-ui/button";
+import { Box, Center, VStack } from "@chakra-ui/layout";
 import { useLocation, useHistory } from "react-router-dom";
-import { useCreateSessionIdMutation } from "src/services/apiSlice";
-import { setSessionId } from "./authSlice";
-import { toast } from "react-toastify";
+import { useCreateSession } from "src/hooks/useCreateSession";
+import { useToast } from "@chakra-ui/toast";
 
 const Auth = () => {
   const location = useLocation();
   const history = useHistory();
+  const toast = useToast();
 
-  const dispatch = useDispatch();
-  const [createSessionId] = useCreateSessionIdMutation();
+  useCreateSession({ location, history });
 
-  useEffect(() => {
-    // Doc 3
-    const requestToken = location.search?.split("&")[0].split("=")[1];
-    const isPermitted = location.search?.split("&")[1];
-
-    if (location.search && isPermitted === "approved=true") {
-      createSessionId(requestToken)
-        .unwrap()
-        .then((data) => {
-          const sessionId = data.session_id;
-
-          dispatch(setSessionId(sessionId));
-          localStorage.setItem("sessionId", sessionId);
-
-          history.replace("/");
-          toast.success("Login success");
-        })
-        .catch((error) => {
-          console.dir(error);
-        });
-    } else if (location.search && isPermitted === "denied=true") {
-      history.replace("/auth");
-      toast.warning("Authentication denied");
-    }
-  }, [location, history, createSessionId, dispatch]);
-
-  const handleAuth = async () => {
+  const handleRedirect = async () => {
     if (
       window.confirm(`You'll be redirected to TMDB, do you agree to continue?`)
     ) {
@@ -57,18 +30,32 @@ const Auth = () => {
         const redirectUrl = location.href.split("?")[0];
         location.href = `https://www.themoviedb.org/authenticate/${requestToken}?redirect_to=${redirectUrl}`;
       } catch (error: any) {
-        toast.error(error.message);
+        toast({
+          title: "Error encountered",
+          description: error,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       }
     } else {
-      toast.info("Redirection cancelled");
+      toast({
+        title: "Redirection cancelled",
+        description: "You can retry by pressing the button",
+        status: "info",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
   return (
-    <>
-      <h1>Welcome to TMDB React Client</h1>
-      <button onClick={handleAuth}>Start Login</button>
-    </>
+    <Center h="400px">
+      <VStack>
+        <Box as={"h1"}>Welcome to TM Database React Client</Box>
+        <Button onClick={handleRedirect}>Start Login</Button>
+      </VStack>
+    </Center>
   );
 };
 

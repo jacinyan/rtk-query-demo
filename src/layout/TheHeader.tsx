@@ -1,7 +1,11 @@
-import React from "react";
+import { Box, Container } from "@chakra-ui/layout";
 
 const TheHeader = () => {
-  return <div>This is the Header</div>;
+  return (
+    <Box as={"header"}>
+      <Container>This is the Header</Container>
+    </Box>
+  );
 };
 
 export default TheHeader;

@@ -4,6 +4,7 @@ import { api } from "./services/apiSlice";
 import { errorLogger } from "./services/errorLogger";
 
 import authReducer from "src/pages/auth/authSlice";
+import tvShowsReducer from "src/pages/views/home/tvShowsSlice";
 
 const sessionIdFromLocalStorage = (
   localStorage.getItem("sessionId") ? localStorage.getItem("sessionId") : ""
@@ -19,6 +20,7 @@ export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     auth: authReducer,
+    tvShows: tvShowsReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(api.middleware).concat(errorLogger);

@@ -1,7 +1,7 @@
-import React from "react";
+import { Box } from "@chakra-ui/layout";
 
 const NotFound = () => {
-  return <div>Oops...Looks like nothing is here</div>;
+  return <Box>Oops...Looks like nothing is here</Box>;
 };
 
 export default NotFound;
