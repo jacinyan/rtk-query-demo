@@ -1,16 +1,16 @@
 import {
   MiddlewareAPI,
   isRejectedWithValue,
-  Dispatch,
-  AnyAction,
+  Middleware,
 } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import { AppDispatch } from "src/store";
 
 /**
  * Log a warning and show a toast!
  */
-export const errorLogger =
-  (api: MiddlewareAPI) => (next: Dispatch<AnyAction>) => (action: any) => {
+export const errorLogger: Middleware =
+  (api: MiddlewareAPI) => (next) => (action) => {
     // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these use matchers!
     if (isRejectedWithValue(action)) {
       console.log(action);

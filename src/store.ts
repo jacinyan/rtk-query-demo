@@ -5,6 +5,16 @@ import { errorLogger } from "./services/errorLogger";
 
 import authReducer from "src/pages/auth/authSlice";
 
+const sessionIdFromLocalStorage = (
+  localStorage.getItem("sessionId") ? localStorage.getItem("sessionId") : ""
+) as string;
+
+const preloadedState = {
+  auth: {
+    sessionId: sessionIdFromLocalStorage,
+  },
+};
+
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
@@ -13,7 +23,7 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(api.middleware).concat(errorLogger);
   },
-  // preloadedState,
+  preloadedState,
 });
 
 export type AppDispatch = typeof store.dispatch;
