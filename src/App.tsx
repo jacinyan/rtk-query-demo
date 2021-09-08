@@ -1,5 +1,5 @@
 import { Route, Switch, Redirect } from "react-router-dom";
-import Login from "./pages/login";
+import Auth from "./pages/auth";
 import TheLayout from "src/layout/TheLayout";
 
 function App() {
@@ -7,12 +7,12 @@ function App() {
 
   return (
     <Switch>
-      <Route exact path={"/login"} render={() => <Login />} />
+      <Route exact path={"/auth"} render={() => <Auth />} />
       <Route
         path="/"
         render={() => {
           if (!sessionId) {
-            return <Redirect to="/login" />;
+            return <Redirect to="/auth" />;
           } else {
             return <TheLayout />;
           }

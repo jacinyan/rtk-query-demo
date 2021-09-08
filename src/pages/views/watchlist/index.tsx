@@ -1,7 +1,7 @@
 import React from "react";
 
-const Wishlist = () => {
+const WatchList = () => {
   return <div>This is wishlist</div>;
 };
 
-export default Wishlist;
+export default WatchList;
