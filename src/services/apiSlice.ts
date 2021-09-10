@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { IGetTVShowsResponse } from "src/pages/views/home/types";
+import { IGetTVShowsResponse } from "src/features/home/types";
 import { RootState } from "src/store";
 
 export const api = createApi({
@@ -36,6 +36,17 @@ export const api = createApi({
           url: keywords
             ? `/search/tv?api_key=${process.env.REACT_APP_API_KEY}&query=${keywords}&page=${page}`
             : `/tv/top_rated?api_key=${process.env.REACT_APP_API_KEY}&page=${page}`,
+        };
+      },
+    }),
+    getWatchListTVShows: builder.query({
+      query: (requestToken) => {
+        return {
+          url: `/authentication/session/new?api_key=${process.env.REACT_APP_API_KEY}`,
+          method: "POST",
+          body: {
+            request_token: requestToken,
+          },
         };
       },
     }),

@@ -10,8 +10,8 @@ const TheLayout = () => {
   return (
     <>
       <TheHeader />
-      <Box as={"main"}>
-        <Container maxW={"1553px"}>
+      <Box as={"main"} minH={"80vh"}>
+        <Container maxW={"1280px"}>
           <Switch>
             {routes.map((route, idx) => {
               return (

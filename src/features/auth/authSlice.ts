@@ -5,10 +5,14 @@ export const authAlice = createSlice({
   name: "auth",
   initialState: {
     sessionId: "",
+    accountId: "",
   },
   reducers: {
     setSessionId: (state, { payload: sessionId }) => {
       state.sessionId = sessionId;
+    },
+    setAccountId: (state, { payload: accountId }) => {
+      state.sessionId = accountId;
     },
   },
 });

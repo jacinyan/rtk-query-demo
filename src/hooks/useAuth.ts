@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { selectSessionId } from "src/pages/auth/authSlice";
+import { selectSessionId } from "src/features/auth/authSlice";
 import { useAppSelector } from "./rtkq";
 
 export const useAuth = () => {

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { setSessionId } from "src/pages/auth/authSlice";
+import { setSessionId } from "src/features/auth/authSlice";
 import { useCreateSessionIdMutation } from "src/services/apiSlice";
 import { useToast } from "@chakra-ui/toast";
 import { History, Location } from "history";
