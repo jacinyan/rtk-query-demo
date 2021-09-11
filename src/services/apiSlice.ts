@@ -48,14 +48,14 @@ export const api = createApi({
       providesTags: ["WatchList"],
     }),
     updateTVShowWatchList: builder.mutation({
-      query: ({ accountId, sessionId, itemId }) => {
+      query: ({ accountId, sessionId, itemId, watchList }) => {
         return {
           url: `/account/${accountId}/watchlist?api_key=${process.env.REACT_APP_API_KEY}&session_id=${sessionId}`,
           method: "POST",
           body: {
             media_type: "tv",
             media_id: itemId,
-            watchlist: true,
+            watchlist: watchList,
           },
         };
       },

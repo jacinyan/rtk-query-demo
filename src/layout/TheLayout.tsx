@@ -5,10 +5,12 @@ import routes from "src/config/routes";
 
 import TheFooter from "./TheFooter";
 import TheHeader from "./TheHeader";
+import TheSidebar from "./TheSidebar";
 
 const TheLayout = () => {
   return (
     <>
+      <TheSidebar />
       <TheHeader />
       <Box as={"main"} minH={"80vh"}>
         <Container maxW={"1280px"}>

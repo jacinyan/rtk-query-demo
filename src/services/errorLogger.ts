@@ -4,14 +4,23 @@ import {
   Middleware,
 } from "@reduxjs/toolkit";
 import { createStandaloneToast } from "@chakra-ui/react";
+import NProgress from "nprogress";
 
 const toast = createStandaloneToast();
-/**
- * Log a warning and show a toast!
- */
+
 export const errorLogger: Middleware =
   (api: MiddlewareAPI) => (next) => (action) => {
-    // RTK Query uses `createAsyncThunk` from redux-toolkit under the hood, so we're able to utilize these use matchers!
+    NProgress.configure({ showSpinner: false });
+    try {
+      if (action.meta && action.meta.requestStatus === "pending") {
+        NProgress.start();
+      }
+    } finally {
+      if (action.meta && action.meta.requestStatus === "fulfilled") {
+        NProgress.done();
+      }
+    }
+
     if (isRejectedWithValue(action)) {
       if (action.payload.originalStatus >= 500) {
         console.warn("error logs -- 5xx", action);

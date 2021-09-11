@@ -4,6 +4,7 @@ import { api } from "./services/apiSlice";
 import { errorLogger } from "./services/errorLogger";
 
 import authReducer from "src/features/auth/authSlice";
+import layoutReducer from "src/layout/layoutSlice";
 
 const sessionIdFromLocalStorage = (
   localStorage.getItem("sessionId") ? localStorage.getItem("sessionId") : ""
@@ -19,6 +20,7 @@ export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
     auth: authReducer,
+    layout: layoutReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(api.middleware).concat(errorLogger);

@@ -1,14 +1,12 @@
-import { Dispatch } from "react";
+import React, { Dispatch, useEffect } from "react";
 import { ChangeEvent } from "react";
-// import { useDebounce } from "src/hooks/useDebounce";
 
-interface ISearchConf {
+interface IProps {
   keywords: string;
   setKeywords: Dispatch<React.SetStateAction<string>>;
-  setPage: Dispatch<React.SetStateAction<number>>;
 }
 
-const SearchBar = ({ keywords, setKeywords, setPage }: ISearchConf) => {
+const SearchBar = ({ keywords, setKeywords }: IProps) => {
   const handleKeywordsChange = (evt: ChangeEvent<HTMLInputElement>) => {
     setKeywords(evt.target.value);
   };
@@ -16,16 +14,16 @@ const SearchBar = ({ keywords, setKeywords, setPage }: ISearchConf) => {
   return (
     <form>
       <div>
-        <div className="control has-icons-left">
-          <span className="icon is-small is-left">
-            <i className="fas fa-search"></i>
+        <div>
+          <span>
+            <i></i>
           </span>
           <input
             placeholder="Search TV Shows..."
             onChange={handleKeywordsChange}
             value={keywords}
             required
-            autoFocus={keywords ? true : false}
+            // autoFocus={keywords ? true : false}
           />
         </div>
       </div>
@@ -33,4 +31,4 @@ const SearchBar = ({ keywords, setKeywords, setPage }: ISearchConf) => {
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);

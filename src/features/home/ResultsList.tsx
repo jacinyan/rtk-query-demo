@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Table,
   Thead,
@@ -9,45 +10,46 @@ import {
   Icon,
   Box,
 } from "@chakra-ui/react";
-import { useMemo, useRef, useCallback } from "react";
-import { useTable, useSortBy } from "react-table";
-import { IGetTVShowsResponse, TColumns } from "./types";
+import { useMemo, useCallback, useEffect, useState } from "react";
+import { useTable } from "react-table";
+import { ITVShow, TColumns } from "./types";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import { useUpdateTVShowWatchListMutation } from "src/services/apiSlice";
 import { useTVShowWatchList } from "src/hooks/useTVShowWatchList";
 
 type IProps = {
-  dataTVShows: IGetTVShowsResponse | undefined;
+  dataTVShowsResults: ITVShow[] | undefined;
   isLoading: boolean;
 };
 
 const ResultsList = ({
-  dataTVShows,
+  dataTVShowsResults,
   isLoading: isLoadingGetTVShows,
 }: IProps) => {
-  const isAddedRef = useRef<number[]>([]);
+  const [toWatch, setToWatch] = useState<number[]>([]);
 
   const { results, sessionId, accountId } = useTVShowWatchList();
-
-  isAddedRef.current = results.map((item) => item.id);
-  console.log(isAddedRef.current);
-
   const [updateWatchList] = useUpdateTVShowWatchListMutation();
 
-  const toggleIsAdded = useCallback((id: number) => {
-    console.log("@");
+  const watchListResultsIds = useMemo(() => {
+    return results.map((item) => item.id);
+  }, [results]);
 
-    const position = isAddedRef?.current?.indexOf(id);
+  const toggleToWatch = useCallback(
+    (id: number) => {
+      const position = toWatch.indexOf(id);
+      let newToWatch = toWatch.slice();
 
-    let newIsAdded = isAddedRef?.current?.slice();
-    if (position !== -1) {
-      newIsAdded.splice(position, 1);
-    } else {
-      newIsAdded = [...isAddedRef.current, id];
-    }
-    isAddedRef.current = newIsAdded;
-  }, []);
+      if (position !== -1) {
+        newToWatch.splice(position, 1);
+      } else {
+        newToWatch = [...toWatch, id];
+      }
+      setToWatch(newToWatch);
+    },
+    [toWatch]
+  );
 
   const columns: TColumns = useMemo(
     () => [
@@ -55,10 +57,15 @@ const ResultsList = ({
         Header: "Poster Path",
         accessor: "poster_path",
         Cell: (tableProps: any) => {
+          const { poster_path } = tableProps.row.original;
           return (
             <Image
               maxW={"120px"}
-              src={`https://image.tmdb.org/t/p/w500/${tableProps.row.original.poster_path}`}
+              src={
+                poster_path
+                  ? `https://image.tmdb.org/t/p/w500/${poster_path}`
+                  : `https://via.placeholder.com/500x750.png?text=N/A`
+              }
               alt={tableProps.row.original.name}
             />
           );
@@ -69,8 +76,16 @@ const ResultsList = ({
         accessor: "name",
       },
       {
-        Header: "Original Language",
+        Header: "Language",
         accessor: "original_language",
+      },
+      {
+        Header: "Rating",
+        accessor: "vote_average",
+        Cell: (tableProps: any) => {
+          const { vote_average } = tableProps.row.original;
+          return `${vote_average}%`;
+        },
       },
       {
         Header: "First Air Date",
@@ -80,10 +95,7 @@ const ResultsList = ({
         Header: "Add/Delete",
         accessor: "id",
         Cell: (tableProps: any) => {
-          // console.log("tableProps", tableProps.row);
           const { id: itemId } = tableProps.row.original;
-          // const original = tableProps.row.original;
-
           return (
             <Box
               onClick={async () => {
@@ -92,14 +104,15 @@ const ResultsList = ({
                     accountId,
                     sessionId,
                     itemId,
-                  });
-                  toggleIsAdded(itemId);
+                    watchList: toWatch.includes(itemId) ? false : true,
+                  }).unwrap();
+                  toggleToWatch(itemId);
                 } catch (error) {
                   console.warn(error);
                 }
               }}
             >
-              {isAddedRef.current?.includes(itemId) ? (
+              {toWatch.includes(itemId) ? (
                 <Icon as={DeleteIcon} />
               ) : (
                 <Icon as={AddIcon} />
@@ -109,52 +122,60 @@ const ResultsList = ({
         },
       },
     ],
-    [accountId, sessionId, updateWatchList, isAddedRef, toggleIsAdded]
+    [accountId, sessionId, updateWatchList, toggleToWatch, toWatch]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: dataTVShows ? dataTVShows.results : [],
+      data: dataTVShowsResults ? dataTVShowsResults : [],
     });
 
+  useEffect(() => {
+    setToWatch(watchListResultsIds);
+  }, [watchListResultsIds]);
+
   return (
-    <Table {...getTableProps()}>
-      <Thead>
-        {headerGroups.map((headerGroup) => (
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column, idx) => {
-              return <Th key={idx}>{column.render("Header")}</Th>;
-            })}
-          </Tr>
-        ))}
-      </Thead>
-      <Tbody {...getTableBodyProps()}>
-        {isLoadingGetTVShows ? (
-          <Tr>
-            <Th>Loading....</Th>
-          </Tr>
-        ) : rows.length === 0 ? (
-          <Tr>
-            <Th>No Data</Th>
-          </Tr>
-        ) : (
-          rows.map((row) => {
-            prepareRow(row);
-            return (
-              <Tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
-                  );
-                })}
-              </Tr>
-            );
-          })
-        )}
-      </Tbody>
-    </Table>
+    <Box overflowX="auto">
+      <Table {...getTableProps()}>
+        <Thead>
+          {headerGroups.map((headerGroup) => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, idx) => {
+                return <Th key={idx}>{column.render("Header")}</Th>;
+              })}
+            </Tr>
+          ))}
+        </Thead>
+        <Tbody {...getTableBodyProps()}>
+          {isLoadingGetTVShows ? (
+            <Tr>
+              <Th>Loading....</Th>
+            </Tr>
+          ) : rows.length === 0 ? (
+            <Tr>
+              <Th>No Data</Th>
+            </Tr>
+          ) : (
+            rows.map((row) => {
+              prepareRow(row);
+              return (
+                <Tr {...row.getRowProps()}>
+                  {row.cells.map((cell) => {
+                    return (
+                      <Td {...cell.getCellProps()}>{cell.render("Cell")}</Td>
+                    );
+                  })}
+                </Tr>
+              );
+            })
+          )}
+        </Tbody>
+      </Table>
+    </Box>
   );
 };
 
-export default ResultsList;
+export default React.memo(ResultsList);
+
+// ResultsList.whyDidYouRender = true;

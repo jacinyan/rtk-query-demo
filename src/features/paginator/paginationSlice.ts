@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 
-export const authAlice = createSlice({
+export const paginationSlice = createSlice({
   name: "auth",
   initialState: {
     sessionId: "",
@@ -16,8 +16,8 @@ export const authAlice = createSlice({
   },
 });
 
-export const { setSessionId, removeSessionId } = authAlice.actions;
+export const { setSessionId, removeSessionId } = paginationSlice.actions;
 
-export default authAlice.reducer;
+export default paginationSlice.reducer;
 
 export const selectSessionId = (state: RootState) => state.auth.sessionId;

@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useGetTVShowsQuery } from "src/services/apiSlice";
 import SearchBar from "./SearchBar";
 import ResultsList from "./ResultsList";
-import { Box } from "@chakra-ui/layout";
+import { Box, Spacer } from "@chakra-ui/layout";
+import Paginator from "../paginator";
 
 const Home = () => {
   const [keywords, setKeywords] = useState("");
   const [page, setPage] = useState(1);
+  console.log("page -- home", page);
 
   const { data: dataTVShows, isLoading: isLoadingGetTVShows } =
     useGetTVShowsQuery({
@@ -14,22 +16,32 @@ const Home = () => {
       page,
     });
 
+  const dataTVShowsResults = useMemo(() => {
+    return dataTVShows ? dataTVShows.results : undefined;
+  }, [dataTVShows]);
+
+  const dataTVShowsTotalResults = useMemo(() => {
+    return dataTVShows ? dataTVShows.total_results : undefined;
+  }, [dataTVShows]);
+
   return (
     <>
       <Box as={"h1"}>{keywords ? "Results" : "Top Rated"}</Box>
-      <SearchBar
-        keywords={keywords}
-        setKeywords={setKeywords}
-        setPage={setPage}
+      <SearchBar keywords={keywords} setKeywords={setKeywords} />
+      <ResultsList
+        dataTVShowsResults={dataTVShowsResults}
+        isLoading={isLoadingGetTVShows}
       />
-      {
-        <ResultsList
-          dataTVShows={dataTVShows}
-          isLoading={isLoadingGetTVShows}
-        />
-      }
+      <Spacer />
+      <Paginator
+        keywords={keywords}
+        setPage={setPage}
+        dataTVShowsTotalResults={dataTVShowsTotalResults}
+      />
     </>
   );
 };
 
 export default Home;
+
+Home.whyDidYouRender = true;

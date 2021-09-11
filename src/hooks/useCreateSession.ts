@@ -3,7 +3,7 @@ import { setSessionId } from "src/features/auth/authSlice";
 import { useCreateSessionIdMutation } from "src/services/apiSlice";
 import { useToast } from "@chakra-ui/toast";
 import { History, Location } from "history";
-import { useAppDispatch } from "./rtkq";
+import { useAppDispatch } from "./rtk";
 import { useAuth } from "./useAuth";
 
 interface IRouteProps {
@@ -13,8 +13,9 @@ interface IRouteProps {
 
 export const useCreateSession = ({ history, location }: IRouteProps) => {
   const dispatch = useAppDispatch();
-  const [createSessionId] = useCreateSessionIdMutation();
+
   const sessionId = useAuth();
+  const [createSessionId] = useCreateSessionIdMutation();
   const toast = useToast();
 
   useEffect(() => {
@@ -33,7 +34,6 @@ export const useCreateSession = ({ history, location }: IRouteProps) => {
           const response = await createSessionId(requestToken).unwrap();
 
           const session_id = response.session_id;
-
           dispatch(setSessionId(session_id));
           localStorage.setItem("sessionId", session_id);
 
