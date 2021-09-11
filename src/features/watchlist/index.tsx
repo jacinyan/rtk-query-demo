@@ -1,10 +1,8 @@
-import { Box, Heading, StackDivider, Text, VStack } from "@chakra-ui/layout";
-import { useAppSelector } from "src/hooks/rtkq";
-import { ITVShow } from "../home/types";
-import { selectShowsInList } from "./watchListSlice";
+import { Box, StackDivider, Text, VStack } from "@chakra-ui/layout";
+import { useTVShowWatchList } from "src/hooks/useTVShowWatchList";
 
 const WatchList = () => {
-  const showsInList: ITVShow[] = useAppSelector(selectShowsInList);
+  const { results: watchList } = useTVShowWatchList();
 
   return (
     <>
@@ -14,10 +12,12 @@ const WatchList = () => {
         spacing={4}
         align="stretch"
       >
-        {showsInList.map((show) => {
+        {watchList.map((show) => {
           return (
             <Box p={5} shadow="md" borderWidth="1px" key={show.id}>
-              <Box as={"h4"}>{show.name}</Box>
+              <Box as={"h4"}>
+                {show.name}({show.first_air_date})
+              </Box>
               <Text mt={4}>{show.overview}</Text>
             </Box>
           );

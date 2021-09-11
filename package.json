@@ -37,7 +37,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint --ignore-path .gitignore ."
+    "check-types": "tsc --noemit",
+    "eslint": "eslint --ignore-path .gitignore .",
+    "lint": "yarn eslint && yarn check-types"
   },
   "eslintConfig": {
     "extends": [

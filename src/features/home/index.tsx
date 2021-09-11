@@ -8,10 +8,11 @@ const Home = () => {
   const [keywords, setKeywords] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading: isLoadingGetTVShows } = useGetTVShowsQuery({
-    keywords,
-    page,
-  });
+  const { data: dataTVShows, isLoading: isLoadingGetTVShows } =
+    useGetTVShowsQuery({
+      keywords,
+      page,
+    });
 
   return (
     <>
@@ -21,7 +22,12 @@ const Home = () => {
         setKeywords={setKeywords}
         setPage={setPage}
       />
-      {<ResultsList data={data} isLoading={isLoadingGetTVShows} />}
+      {
+        <ResultsList
+          dataTVShows={dataTVShows}
+          isLoading={isLoadingGetTVShows}
+        />
+      }
     </>
   );
 };

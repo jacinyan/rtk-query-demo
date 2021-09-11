@@ -9,39 +9,51 @@ import {
   Icon,
   Box,
 } from "@chakra-ui/react";
-import { useMemo, useCallback } from "react";
+import { useMemo, useRef, useCallback } from "react";
 import { useTable, useSortBy } from "react-table";
 import { IGetTVShowsResponse, TColumns } from "./types";
-import { AddIcon } from "@chakra-ui/icons";
-import { addToList } from "src/features/watchlist/watchListSlice";
-import { useAppDispatch } from "src/hooks/rtkq";
-import { useAppSelector } from "src/hooks/rtkq";
-import { ITVShow } from "./types";
-import { selectShowsInList } from "../watchlist/watchListSlice";
+import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
+
+import { useUpdateTVShowWatchListMutation } from "src/services/apiSlice";
+import { useTVShowWatchList } from "src/hooks/useTVShowWatchList";
 
 type IProps = {
-  data: IGetTVShowsResponse | undefined;
+  dataTVShows: IGetTVShowsResponse | undefined;
   isLoading: boolean;
 };
 
-const ResultsList = ({ data, isLoading }: IProps) => {
-  const dispatch = useAppDispatch();
-  const showsInList: ITVShow[] = useAppSelector(selectShowsInList);
+const ResultsList = ({
+  dataTVShows,
+  isLoading: isLoadingGetTVShows,
+}: IProps) => {
+  const isAddedRef = useRef<number[]>([]);
 
-  const toggleAddDelete = useCallback(
-    (item) => {
-      // console.log("toggleAddDelete", item);
+  const { results, sessionId, accountId } = useTVShowWatchList();
 
-      dispatch(addToList(item));
-    },
-    [dispatch]
-  );
+  isAddedRef.current = results.map((item) => item.id);
+  console.log(isAddedRef.current);
+
+  const [updateWatchList] = useUpdateTVShowWatchListMutation();
+
+  const toggleIsAdded = useCallback((id: number) => {
+    console.log("@");
+
+    const position = isAddedRef?.current?.indexOf(id);
+
+    let newIsAdded = isAddedRef?.current?.slice();
+    if (position !== -1) {
+      newIsAdded.splice(position, 1);
+    } else {
+      newIsAdded = [...isAddedRef.current, id];
+    }
+    isAddedRef.current = newIsAdded;
+  }, []);
 
   const columns: TColumns = useMemo(
     () => [
       {
         Header: "Poster Path",
-        accessor: "poster_path", // accessor is the "key" in the data
+        accessor: "poster_path",
         Cell: (tableProps: any) => {
           return (
             <Image
@@ -68,34 +80,42 @@ const ResultsList = ({ data, isLoading }: IProps) => {
         Header: "Add/Delete",
         accessor: "id",
         Cell: (tableProps: any) => {
-          console.log("tableProps", tableProps.row);
-          const { name, overview, first_air_date, id } =
-            tableProps.row.original;
+          // console.log("tableProps", tableProps.row);
+          const { id: itemId } = tableProps.row.original;
+          // const original = tableProps.row.original;
 
           return (
             <Box
-              onClick={() =>
-                toggleAddDelete({
-                  name,
-                  overview,
-                  first_air_date,
-                  id,
-                })
-              }
+              onClick={async () => {
+                try {
+                  await updateWatchList({
+                    accountId,
+                    sessionId,
+                    itemId,
+                  });
+                  toggleIsAdded(itemId);
+                } catch (error) {
+                  console.warn(error);
+                }
+              }}
             >
-              <Icon as={AddIcon} />
+              {isAddedRef.current?.includes(itemId) ? (
+                <Icon as={DeleteIcon} />
+              ) : (
+                <Icon as={AddIcon} />
+              )}
             </Box>
           );
         },
       },
     ],
-    [toggleAddDelete]
+    [accountId, sessionId, updateWatchList, isAddedRef, toggleIsAdded]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
       columns,
-      data: data ? data.results : [],
+      data: dataTVShows ? dataTVShows.results : [],
     });
 
   return (
@@ -110,7 +130,7 @@ const ResultsList = ({ data, isLoading }: IProps) => {
         ))}
       </Thead>
       <Tbody {...getTableBodyProps()}>
-        {isLoading ? (
+        {isLoadingGetTVShows ? (
           <Tr>
             <Th>Loading....</Th>
           </Tr>

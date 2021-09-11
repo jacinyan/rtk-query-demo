@@ -6,12 +6,12 @@ import { History, Location } from "history";
 import { useAppDispatch } from "./rtkq";
 import { useAuth } from "./useAuth";
 
-interface ISession {
+interface IRouteProps {
   history: History<unknown>;
   location: Location<unknown>;
 }
 
-export const useCreateSession = ({ history, location }: ISession) => {
+export const useCreateSession = ({ history, location }: IRouteProps) => {
   const dispatch = useAppDispatch();
   const [createSessionId] = useCreateSessionIdMutation();
   const sessionId = useAuth();
@@ -31,6 +31,7 @@ export const useCreateSession = ({ history, location }: ISession) => {
       (async () => {
         try {
           const response = await createSessionId(requestToken).unwrap();
+
           const session_id = response.session_id;
 
           dispatch(setSessionId(session_id));
