@@ -1,33 +1,37 @@
 import React, { Dispatch, useEffect } from "react";
 import { ChangeEvent } from "react";
+import { Input, InputLeftElement, InputGroup } from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+import { useDebouncedCallback } from "use-debounce";
 
 interface IProps {
-  keywords: string;
   setKeywords: Dispatch<React.SetStateAction<string>>;
 }
 
-const SearchBar = ({ keywords, setKeywords }: IProps) => {
-  const handleKeywordsChange = (evt: ChangeEvent<HTMLInputElement>) => {
-    setKeywords(evt.target.value);
-  };
+const SearchBar = ({ setKeywords }: IProps) => {
+  // Debounce callback
+  const debounced = useDebouncedCallback(
+    // function
+    (value) => {
+      setKeywords(value);
+    },
+    // delay in ms
+    500
+  );
 
   return (
-    <form>
-      <div>
-        <div>
-          <span>
-            <i></i>
-          </span>
-          <input
-            placeholder="Search TV Shows..."
-            onChange={handleKeywordsChange}
-            value={keywords}
-            required
-            // autoFocus={keywords ? true : false}
-          />
-        </div>
-      </div>
-    </form>
+    <InputGroup>
+      <InputLeftElement
+        pointerEvents="none"
+        children={<SearchIcon color="gray.300" />}
+      />
+      <Input
+        placeholder="Search TV Shows..."
+        onChange={(e) => debounced(e.target.value)}
+        defaultValue={""}
+        required
+      />
+    </InputGroup>
   );
 };
 

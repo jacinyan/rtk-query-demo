@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { useGetTVShowsQuery } from "src/services/apiSlice";
 import SearchBar from "./SearchBar";
 import ResultsList from "./ResultsList";
-import { Box, Spacer } from "@chakra-ui/layout";
-import Paginator from "../paginator";
+import { Box, Divider } from "@chakra-ui/layout";
+import Paginator from "src/components/Paginator";
 
 const Home = () => {
   const [keywords, setKeywords] = useState("");
@@ -27,12 +27,12 @@ const Home = () => {
   return (
     <>
       <Box as={"h1"}>{keywords ? "Results" : "Top Rated"}</Box>
-      <SearchBar keywords={keywords} setKeywords={setKeywords} />
+      <SearchBar setKeywords={setKeywords} />
       <ResultsList
         dataTVShowsResults={dataTVShowsResults}
         isLoading={isLoadingGetTVShows}
       />
-      <Spacer />
+      <Divider />
       <Paginator
         keywords={keywords}
         setPage={setPage}

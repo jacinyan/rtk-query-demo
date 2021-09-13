@@ -16,14 +16,14 @@ interface IProps {
 }
 
 const Paginator = ({
-  setPage: setTargetPage,
+  setPage: setQueryPage,
   dataTVShowsTotalResults,
   keywords,
 }: IProps) => {
   const prevKeywordsRef = useRef<string>("");
 
   const { currentPage, setCurrentPage, pagesCount, pages } = usePagination({
-    total: dataTVShowsTotalResults ? dataTVShowsTotalResults : 0,
+    total: dataTVShowsTotalResults && dataTVShowsTotalResults,
     initialState: {
       currentPage: 1,
       pageSize: 20,
@@ -43,8 +43,8 @@ const Paginator = ({
     }
 
     prevKeywordsRef.current = keywords;
-    setTargetPage(currentPage);
-  }, [pagesCount, currentPage, setCurrentPage, setTargetPage, keywords]);
+    setQueryPage(currentPage);
+  }, [pagesCount, currentPage, setCurrentPage, setQueryPage, keywords]);
 
   return (
     <Pagination
@@ -52,7 +52,7 @@ const Paginator = ({
       currentPage={currentPage}
       onPageChange={setCurrentPage}
     >
-      <PaginationContainer>
+      <PaginationContainer w="full" pt={4}>
         <PaginationPrevious>Previous</PaginationPrevious>
         <PaginationPageGroup>
           {pages.map((page: number) => (

@@ -8,10 +8,10 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import { myTheme } from "src/styles/theme";
 import App from "./App";
 
 import { Global } from "@emotion/react";
+import { myTheme } from "src/styles/theme";
 import { customStyles } from "./styles/customStyles";
 import "focus-visible/dist/focus-visible";
 import "@fontsource/roboto-condensed/400.css";
