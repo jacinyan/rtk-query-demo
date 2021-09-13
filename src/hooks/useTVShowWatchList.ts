@@ -1,15 +1,13 @@
 import { useMemo } from "react";
+import { selectAuthInfo } from "src/features/auth/authSlice";
 import { useGetTVShowWatchListQuery } from "src/services/apiSlice";
-import { useAccount } from "./useAccount";
-import { useAuth } from "./useAuth";
+import { useAppSelector } from "src/store/hooks";
 
 export const useTVShowWatchList = () => {
-  const sessionId = useAuth();
-  const dataAccount = useAccount();
-  const accountId = dataAccount && dataAccount.id;
+  const { sessionId, accountId } = useAppSelector(selectAuthInfo);
 
   const { data } = useGetTVShowWatchListQuery({
-    sessionId,
+    sessionId: sessionId && sessionId,
     accountId: accountId && accountId,
   });
 

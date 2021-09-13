@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IGetTVShowsResponse } from "src/features/home/types";
-import { IGetAccountResponse } from "src/hooks/useAccount";
 
 export const api = createApi({
   reducerPath: "api",
@@ -20,10 +19,6 @@ export const api = createApi({
         };
       },
     }),
-    getAccount: builder.query<IGetAccountResponse, string>({
-      query: (sessionId) =>
-        `/account?api_key=${process.env.REACT_APP_API_KEY}&session_id=${sessionId}`,
-    }),
     getTVShows: builder.query<
       IGetTVShowsResponse,
       { keywords: string; page: number }
@@ -38,7 +33,7 @@ export const api = createApi({
     }),
     getTVShowWatchList: builder.query<
       IGetTVShowsResponse,
-      { accountId: number | undefined; sessionId: string }
+      { accountId: number | null; sessionId: string | null }
     >({
       query: ({ accountId, sessionId }) => {
         return {
@@ -66,7 +61,6 @@ export const api = createApi({
 
 export const {
   useCreateSessionIdMutation,
-  useGetAccountQuery,
   useGetTVShowsQuery,
   useUpdateTVShowWatchListMutation,
   useGetTVShowWatchListQuery,

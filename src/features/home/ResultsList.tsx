@@ -10,13 +10,14 @@ import {
   Icon,
   Box,
 } from "@chakra-ui/react";
-import { useMemo, useCallback, useEffect, useState } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useTable } from "react-table";
 import { ITVShow, TColumns } from "./types";
 import { AddIcon, DeleteIcon } from "@chakra-ui/icons";
 
 import { useUpdateTVShowWatchListMutation } from "src/services/apiSlice";
 import { useTVShowWatchList } from "src/hooks/useTVShowWatchList";
+import TableSpinner from "src/components/TableSpinner";
 
 type IProps = {
   dataTVShowsResults: ITVShow[] | undefined;
@@ -74,10 +75,14 @@ const ResultsList = ({
       {
         Header: "Name",
         accessor: "name",
+        // maxWidth: 70,
+        // minWidth: 50,
+        width: 60,
       },
       {
         Header: "Language",
         accessor: "original_language",
+        width: 60,
       },
       {
         Header: "Rating",
@@ -113,9 +118,9 @@ const ResultsList = ({
               }}
             >
               {toWatch.includes(itemId) ? (
-                <Icon as={DeleteIcon} />
+                <Icon as={DeleteIcon} cursor={"pointer"} />
               ) : (
-                <Icon as={AddIcon} />
+                <Icon as={AddIcon} cursor={"pointer"} />
               )}
             </Box>
           );
@@ -150,11 +155,13 @@ const ResultsList = ({
         <Tbody {...getTableBodyProps()}>
           {isLoadingGetTVShows ? (
             <Tr>
-              <Th>Loading....</Th>
+              <Td colSpan={6}>
+                <TableSpinner />
+              </Td>
             </Tr>
           ) : rows.length === 0 ? (
             <Tr>
-              <Th>No Data</Th>
+              <Td colSpan={6}>No Data</Td>
             </Tr>
           ) : (
             rows.map((row) => {

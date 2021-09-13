@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { setSessionId } from "src/features/auth/authSlice";
+import { setAuthInfo } from "src/features/auth/authSlice";
 import { useCreateSessionIdMutation } from "src/services/apiSlice";
 import { useToast } from "@chakra-ui/toast";
 import { History, Location } from "history";
-import { useAppDispatch } from "./rtk";
+import { useAppDispatch } from "../store/hooks";
 import { useAuth } from "./useAuth";
 
 interface IRouteProps {
@@ -14,7 +14,7 @@ interface IRouteProps {
 export const useCreateSession = ({ history, location }: IRouteProps) => {
   const dispatch = useAppDispatch();
 
-  const sessionId = useAuth();
+  const { sessionId } = useAuth();
   const [createSessionId] = useCreateSessionIdMutation();
   const toast = useToast();
 
@@ -31,11 +31,23 @@ export const useCreateSession = ({ history, location }: IRouteProps) => {
     if (location.search && isPermitted === "approved=true") {
       (async () => {
         try {
-          const response = await createSessionId(requestToken).unwrap();
+          const respSession = await createSessionId(requestToken).unwrap();
+          const { session_id: sessionId } = respSession;
 
-          const session_id = response.session_id;
-          dispatch(setSessionId(session_id));
-          localStorage.setItem("sessionId", session_id);
+          const respAccount = await fetch(
+            process.env.REACT_APP_BASE_API +
+              `/account?api_key=${process.env.REACT_APP_API_KEY}&session_id=${sessionId}`
+          );
+          if (!respAccount.ok) {
+            throw new Error(respAccount.statusText);
+          }
+
+          const { id: accountId } = await respAccount.json();
+          dispatch(setAuthInfo({ accountId, sessionId }));
+          localStorage.setItem(
+            "__TMDB_AUTHINFO__",
+            JSON.stringify({ accountId, sessionId })
+          );
 
           history.replace("/");
           toast({
@@ -59,5 +71,5 @@ export const useCreateSession = ({ history, location }: IRouteProps) => {
         isClosable: true,
       });
     }
-  }, [location, history, createSessionId, dispatch, sessionId, toast]);
+  }, [location, history, createSessionId, dispatch, toast, sessionId]);
 };

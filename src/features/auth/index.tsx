@@ -3,6 +3,7 @@ import { Box, Center, VStack } from "@chakra-ui/layout";
 import { useLocation, useHistory } from "react-router-dom";
 import { useCreateSession } from "src/hooks/useCreateSession";
 import { useToast } from "@chakra-ui/toast";
+import { useCallback } from "react";
 
 const Auth = () => {
   const location = useLocation();
@@ -11,7 +12,7 @@ const Auth = () => {
 
   useCreateSession({ location, history });
 
-  const handleRedirect = async () => {
+  const handleRedirect = useCallback(async () => {
     if (
       window.confirm(`You'll be redirected to TMDB, do you agree to continue?`)
     ) {
@@ -47,7 +48,7 @@ const Auth = () => {
         isClosable: true,
       });
     }
-  };
+  }, [toast]);
 
   return (
     <Center h="400px">

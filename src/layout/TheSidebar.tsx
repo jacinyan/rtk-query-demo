@@ -14,8 +14,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { selectIsOpenSidebar, setIsOpenSidebar } from "./layoutSlice";
-import { useAppDispatch, useAppSelector } from "src/hooks/rtk";
-import { removeSessionId } from "src/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "src/store/hooks";
+import { removeAuthInfo } from "src/features/auth/authSlice";
 
 const TheSidebar = () => {
   const btnRef = useRef(null);
@@ -69,10 +69,10 @@ const TheSidebar = () => {
             Cancel
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme="linkedin"
             onClick={() => {
-              dispatch(removeSessionId());
-              localStorage.removeItem("sessionId");
+              dispatch(removeAuthInfo());
+              localStorage.removeItem("__TMDB_AUTHINFO__");
             }}
           >
             Logout

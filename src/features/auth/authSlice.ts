@@ -1,23 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 
+type AuthState = {
+  sessionId: string | null;
+  accountId: number | null;
+};
+
 export const authAlice = createSlice({
   name: "auth",
   initialState: {
-    sessionId: "",
-  },
+    sessionId: null,
+    accountId: null,
+  } as AuthState,
   reducers: {
-    setSessionId: (state, { payload: sessionId }) => {
+    setAuthInfo: (state, { payload: { sessionId, accountId } }) => {
       state.sessionId = sessionId;
+      state.accountId = accountId;
     },
-    removeSessionId: (state) => {
-      state.sessionId = "";
+    removeAuthInfo: (state) => {
+      state.sessionId = null;
+      state.accountId = null;
     },
   },
 });
 
-export const { setSessionId, removeSessionId } = authAlice.actions;
+export const { setAuthInfo, removeAuthInfo } = authAlice.actions;
 
 export default authAlice.reducer;
 
-export const selectSessionId = (state: RootState) => state.auth.sessionId;
+export const selectAuthInfo = (state: RootState) => state.auth;

@@ -1,7 +1,6 @@
 import loadable from "@loadable/component";
 
 const Home = loadable(
-  // @ts-ignore
   () => import(/* webpackPrefetch: true */ "src/features/home")
 );
 const WatchList = loadable(

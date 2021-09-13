@@ -1,6 +1,5 @@
-import React, { Dispatch, useEffect } from "react";
-import { ChangeEvent } from "react";
-import { Input, InputLeftElement, InputGroup } from "@chakra-ui/react";
+import React, { Dispatch } from "react";
+import { Input, InputLeftElement, InputGroup, Box } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -20,18 +19,20 @@ const SearchBar = ({ setKeywords }: IProps) => {
   );
 
   return (
-    <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        children={<SearchIcon color="gray.300" />}
-      />
-      <Input
-        placeholder="Search TV Shows..."
-        onChange={(e) => debounced(e.target.value)}
-        defaultValue={""}
-        required
-      />
-    </InputGroup>
+    <Box pb={"16px"}>
+      <InputGroup>
+        <InputLeftElement
+          pointerEvents="none"
+          children={<SearchIcon color="gray.300" />}
+        />
+        <Input
+          placeholder="Search TV Shows..."
+          onChange={(e) => debounced(e.target.value)}
+          defaultValue={""}
+          required
+        />
+      </InputGroup>
+    </Box>
   );
 };
 

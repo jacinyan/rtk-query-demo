@@ -5,7 +5,7 @@ import TheLayout from "src/layout/TheLayout";
 import { useAuth } from "./hooks/useAuth";
 
 function App() {
-  const sessionId = useAuth();
+  const { sessionId } = useAuth();
 
   return (
     <Switch>

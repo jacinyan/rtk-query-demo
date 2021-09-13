@@ -10,7 +10,9 @@ const WatchList = () => {
 
   return (
     <>
-      <Box as={"h1"}>Watch List</Box>
+      <Box as={"h2"} py={"20px"}>
+        Watch List
+      </Box>
       <VStack
         divider={<StackDivider borderColor="gray.200" />}
         spacing={4}

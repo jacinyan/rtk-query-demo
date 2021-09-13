@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useLayoutEffect, useRef } from "react";
+import React, { Dispatch, useEffect, useRef } from "react";
 import {
   Pagination,
   usePagination,
@@ -61,11 +61,12 @@ const Paginator = ({
               page={page}
               _current={{
                 w: 7,
-                bg: "green.300",
+                bg: "#022540",
                 fontSize: "sm",
                 _hover: {
                   bg: "blue.300",
                 },
+                color: "#fff",
               }}
             />
           ))}

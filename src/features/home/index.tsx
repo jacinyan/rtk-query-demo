@@ -26,7 +26,9 @@ const Home = () => {
 
   return (
     <>
-      <Box as={"h1"}>{keywords ? "Results" : "Top Rated"}</Box>
+      <Box as={"h2"} pt={5} pb={4}>
+        {keywords ? "Results" : "Top Rated"}
+      </Box>
       <SearchBar setKeywords={setKeywords} />
       <ResultsList
         dataTVShowsResults={dataTVShowsResults}

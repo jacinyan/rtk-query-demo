@@ -12,7 +12,7 @@ export const customStyles = css`
 
   #nprogress .bar {
     height: 0.25rem;
-    background: #f811b2 !important;
+    background: #00b4e1 !important;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;

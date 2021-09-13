@@ -1,8 +1,9 @@
-import { selectSessionId } from "src/features/auth/authSlice";
-import { useAppSelector } from "./rtk";
+import { useMemo } from "react";
+import { selectAuthInfo } from "src/features/auth/authSlice";
+import { useAppSelector } from "../store/hooks";
 
 export const useAuth = () => {
-  const sessionId = useAppSelector(selectSessionId);
+  const authInfo = useAppSelector(selectAuthInfo);
 
-  return sessionId;
+  return useMemo(() => authInfo, [authInfo]);
 };
