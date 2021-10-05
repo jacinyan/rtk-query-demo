@@ -1,16 +1,17 @@
 import { Button } from "@chakra-ui/button";
 import { Box, Center, VStack } from "@chakra-ui/layout";
 import { useLocation, useHistory } from "react-router-dom";
-import { useCreateSession } from "src/hooks/useCreateSession";
+import { useSession } from "src/hooks/useSession";
 import { useToast } from "@chakra-ui/toast";
 import { useCallback } from "react";
+import AuthModal from "src/components/AuthModal";
 
 const Auth = () => {
   const location = useLocation();
   const history = useHistory();
   const toast = useToast();
 
-  useCreateSession({ location, history });
+  useSession({ location, history });
 
   const handleRedirect = useCallback(async () => {
     if (
@@ -55,6 +56,7 @@ const Auth = () => {
       <VStack>
         <Box as={"h1"}>Welcome to TM Database React Client</Box>
         <Button onClick={handleRedirect}>Start Login</Button>
+        <AuthModal />
       </VStack>
     </Center>
   );
