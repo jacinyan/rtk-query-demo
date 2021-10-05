@@ -11,7 +11,7 @@ interface IRouteProps {
   location: Location<unknown>;
 }
 
-export const useCreateSession = ({ history, location }: IRouteProps) => {
+export const useSession = ({ history, location }: IRouteProps) => {
   const dispatch = useAppDispatch();
 
   const { sessionId } = useAuth();
